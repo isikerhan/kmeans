@@ -3,14 +3,11 @@ package com.isikerhan.ml.kmeans;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
 import com.isikerhan.ml.math.Vector;
 
 public class Cluster {
 
-	@SerializedName("elements")
 	private List<Vector<?>> elements;
-	@SerializedName("centroid")
 	private Vector<Double> centroid;
 	private int clusterNo;
 

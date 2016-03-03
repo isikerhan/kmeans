@@ -1,6 +1,14 @@
 package com.isikerhan.ml.math;
 
-import com.google.gson.annotations.SerializedName;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class Vector<N extends Number> {
@@ -12,7 +20,6 @@ public class Vector<N extends Number> {
 		return new Vector<>(values);
 	}
 	
-	@SerializedName("values")
 	private N[] values;
 	
 	public Vector(N[] values) {
@@ -89,5 +96,24 @@ public class Vector<N extends Number> {
 		}
 		sb.replace(sb.length() - 3, sb.length() - 1, "");
 		return sb.toString();
+	}
+	
+	public static List<Vector<? extends Number>> fromCsv(File file) throws IOException {
+		
+		List<Vector<?>> list = new ArrayList<>();
+		CSVParser parser = CSVParser.parse(file, Charset.forName("UTF-8"), CSVFormat.DEFAULT);
+		
+		for(CSVRecord record : parser) {
+			Double[] arr = new Double[record.size()];
+			for(int i = 0; i < record.size(); i++){
+				try{
+					arr[i] = Double.parseDouble(record.get(i));
+				} catch(NumberFormatException e) {
+					throw new IOException("Only numeric values are allowed.", e);
+				}
+			}
+			list.add(new Vector<>(arr));
+		}
+		return list;
 	}
 }

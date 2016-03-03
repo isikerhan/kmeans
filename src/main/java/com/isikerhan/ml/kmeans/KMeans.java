@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import com.google.gson.annotations.SerializedName;
 import com.isikerhan.ml.math.Vector;
 import com.isikerhan.ml.math.distance.DistanceFunction;
 import com.isikerhan.ml.math.distance.EuclideanDistance;
 
 public class KMeans {
 
-	@SerializedName("clusters")
 	private Cluster[] clusters;
 	private HashMap<Vector<?>, Integer> clusterIndexes;
 	private int k;
@@ -112,13 +110,14 @@ public class KMeans {
 
 	@Override
 	public String toString() {
+		String nl = System.getProperty("line.separator");
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < getClusters().length; i++) {
-			sb.append(String.format("********** Cluster %d **********\n", i));
+			sb.append(String.format("********** Cluster %d **********" + nl, i));
 			Cluster c = getClusters()[i];
 			for(Vector<?> v : c.getElements())
-				sb.append(v.toString() + "\n");
-			sb.append("\n");
+				sb.append(v.toString() + nl);
+			sb.append(nl);
 		}
 		
 		sb.append(String.format("Sum of squared errors: %.2f.", sumOfSquaredErrors()));
