@@ -10,16 +10,15 @@ import com.isikerhan.ml.math.Vector;
 
 public class KMeansRunner {
 
-	private static final int MAX_NUMBER_OF_ITERATIONS = 15;
-	private static final int K = 7;
+	private static String filePath;
+	private static int maxNumberOfIterations = Integer.MAX_VALUE;
+	private static int k;
 
 	public static void main(String[] args) throws IOException {
 
-		if (args.length < 1) {
-			System.err.println("File path must be specified.");
-			System.exit(1);
-		}
-		File f = new File(args[0]);
+		setArgs(args);
+		
+		File f = new File(filePath);
 		List<Vector<? extends Number>> dataSet = null;
 		try {
 			dataSet = Vector.fromCsv(f);
@@ -38,14 +37,14 @@ public class KMeansRunner {
 				new PrintStream(out)
 		};
 
-		KMeans kmeans = new KMeans(K, dataSet);
+		KMeans kmeans = new KMeans(k, dataSet);
 
 		long t = System.currentTimeMillis();
 		kmeans.initCentroids();
 
 		int numberOfIterations;
 		for (numberOfIterations = 0; kmeans.iterate()
-				&& numberOfIterations < MAX_NUMBER_OF_ITERATIONS; numberOfIterations++)
+				&& numberOfIterations < maxNumberOfIterations; numberOfIterations++)
 			;
 
 		for(PrintStream writer : writers){
@@ -56,5 +55,34 @@ public class KMeansRunner {
 		}
 
 		System.exit(0);
+	}
+	
+	private static void setArgs(String[] args) {
+
+		String msg = "Error! Usage: kmeans <path_to_file> -k <num_of_clusters> [--maxNumOfIterations <max_num_of_iterations>]";
+		
+		if(args.length != 3 && args.length != 5){
+			System.err.println(msg);
+			System.exit(1);
+		}
+		
+		filePath = args[0];
+		Integer numOfClusters = null;
+		Integer maxNumOfIterations = null;
+		for(int i = 1; i < args.length; i++) {
+			
+			if("-k".equals(args[i].trim()))
+				numOfClusters = Integer.parseInt(args[++i]);
+			else if("--maxNumOfIterations".equals(args[i].trim()))
+				maxNumOfIterations = Integer.parseInt(args[++i]);
+		}
+		
+		if(numOfClusters == null){
+			System.err.println(msg);
+			System.exit(1);
+		} else k = numOfClusters.intValue();
+		
+		if(maxNumOfIterations != null)
+			maxNumberOfIterations = maxNumOfIterations.intValue();
 	}
 }

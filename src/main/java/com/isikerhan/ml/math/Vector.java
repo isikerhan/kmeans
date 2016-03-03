@@ -94,7 +94,7 @@ public class Vector<N extends Number> {
 		for(int i = 0; i < values.length; i++) {
 			sb.append(Double.toString(values[i].doubleValue()) + ", ");
 		}
-		sb.replace(sb.length() - 3, sb.length() - 1, "");
+		sb.replace(sb.length() - 2, sb.length() - 1, new String());
 		return sb.toString();
 	}
 	
